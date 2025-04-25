@@ -14,18 +14,18 @@ public class PaddleComController : PaddleController
     [SerializeField, HideInInspector] private DifficultyLevel difficulty;
 
     [SerializeField] private bool isCom;
-    private float _difficultyOffset;
+    [SerializeField] private float _difficultyOffset;
     private Rigidbody2D _rbBall;
     private bool _isMoving;
     
     void Start()
     {
         _rbBall = GameObject.FindWithTag("Ball").GetComponent<Rigidbody2D>();
-        
+        return;
         if(difficulty == DifficultyLevel.EASY)
-            _difficultyOffset = 1.5f;
+            _difficultyOffset = transform.localScale.y + 3f;
         if(difficulty == DifficultyLevel.NORMAL)
-            _difficultyOffset = 0.75f;
+            _difficultyOffset = transform.localScale.y + 1.5f;
         if(difficulty == DifficultyLevel.HARD)
             _difficultyOffset = 0f;
     }
@@ -49,17 +49,18 @@ public class PaddleComController : PaddleController
         if (_rbBall.velocity.x > 0f)
         {
             var ballPositionY = _rbBall.position.y;
+            var paddlePositionY = _rbPaddle.position.y;
             if (!_isMoving)
             {
                 _isMoving = true;
                 if (difficulty != DifficultyLevel.HARD)
-                    ballPositionY = Random.Range(ballPositionY - _difficultyOffset, ballPositionY + _difficultyOffset);
+                    paddlePositionY = Random.Range(paddlePositionY - _difficultyOffset, paddlePositionY + _difficultyOffset);
                 
             }
             
-            if (ballPositionY > _rbPaddle.position.y)
+            if (ballPositionY > paddlePositionY)
                 SetVelocity(Vector2.up);
-            else if (ballPositionY < _rbPaddle.position.y)
+            else if (ballPositionY < paddlePositionY)
                 SetVelocity(Vector2.down);
         }
         else
